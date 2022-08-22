@@ -1,99 +1,81 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React from 'react';
-
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-  Button,
-  TouchableHighlight,
-} from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import ReactNativeBiometrics from 'react-native-biometrics';
-import {useEffect} from 'react';
+import * as React from "react";
+import { StyleSheet, Text, View, Button, Alert } from "react-native";
+import PINCode, {
+  hasUserSetPinCode,
+  resetPinCodeInternalStates,
+  deleteUserPinCode,
+} from "@haskkor/react-native-pincode";
 
 
+export default function App() {
 
-const App = () => {
-  
-
-  const isBiometricSupport = async () => {
-    let {available, biometryType} =
-      await ReactNativeBiometrics.isSensorAvailable();
-    if (available && biometryType === ReactNativeBiometrics.TouchID) {
-      console.log('TouchID is supported', biometryType);
-    } else if (available && biometryType === ReactNativeBiometrics.FaceID) {
-      console.log('FaceID is supported', biometryType);
-    } else if (available && biometryType === ReactNativeBiometrics.Biometrics) {
-      console.log('Biometrics is supported', biometryType);
-    } else {
-      return console.log('Biometrics not supported', biometryType);
+  const finishProcess = async () => {
+    const hasPin = await hasUserSetPinCode();
+    if (hasPin) {
+      Alert.alert(null, "You have successfully set/entered your pin.", [
+        {
+          title: "Ok",
+          onPress: () => {
+            // do nothing
+          },
+        },
+      ]);
+      
     }
-    let {success, error} = await ReactNativeBiometrics.simplePrompt({
-      promptMessage: 'Sign in with Touch ID',
-      // cancelButtonText: 'Close',
-    });
-    console.log({success, error});
-  };
 
+
+  }
   return (
-    <SafeAreaView >
-      <StatusBar/>
-      <ScrollView
-        
-        >
-        {/* <Header /> */}
-        <TouchableHighlight
-          style={{
-            height: 60,
-          }}>
-          <Button
-            title="Login with Biometrics"
-            color="#fe7005"
-            onPress={isBiometricSupport}
+    <View style={styles.container}>
+
+          <PINCode
+            status={'enter'}
+            touchIDDisabled={false}
+            finishProcess={() => finishProcess()}
+            colorCircleButtons={'white'}
+            stylePinCodeButtonNumberPressed={'blue'}
+            colorPassword={'blue'}
+            numbersButtonOverlayColor={'#89afd9'}
+            styleLockScreenText={{fontSize: 20}}
+            stylePinCodeCircle={{height: 20, width: 20,borderRadius: 10}}
+            stylePinCodeColorTitle={'blue'}
+            stylePinCodeColorSubtitle={'blue'}
+            stylePinCodeTextSubtitle={{fontSize: 15,fontWeight: 'bold'}}
+            stylePinCodeTextTitle={{fontSize: 25,fontWeight: 'bold'}}
+            
+            
+            stylePinCodeButtonNumber={'blue'}
+            
           />
-        </TouchableHighlight>
-        
-      </ScrollView>
-    </SafeAreaView>
+
+      </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    backgroundColor: "#F5FCFF",
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  title: {
+    fontSize: 20,
+    textAlign: "center",
+    margin: 10,
+    marginTop: 20,
+    color: "red",
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  button: {
+    marginBottom: 10,
+    padding: 10,
   },
-  highlight: {
-    fontWeight: '700',
+  bold: {
+    fontWeight: 'bold',
+  },
+  seperator: {
+    margin: 10,
+    marginVertical: 8,
+    borderBottomColor: "#737373",
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });
 
-export default App;

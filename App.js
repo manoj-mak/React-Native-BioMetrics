@@ -14,7 +14,7 @@ export default function App() {
     if (hasPin) {
       Alert.alert(null, "You have successfully set/entered your pin.", [
         {
-          title: "Ok",
+          title: "Ok mah boy",
           onPress: () => {
             // do nothing
           },
